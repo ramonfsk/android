@@ -12,6 +12,8 @@ public class Aluno implements Parcelable {
     private String telefone;
     private String email;
 
+    public Aluno() {};
+
     public Aluno(String nome, String telefone, String email) {
         this.nome = nome;
         this.telefone = telefone;
@@ -83,5 +85,9 @@ public class Aluno implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public boolean temIdValido() {
+        return this.id > 1 ? true : false;
     }
 }

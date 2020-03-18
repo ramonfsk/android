@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import br.com.alura.agenda.R;
@@ -32,10 +31,12 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        aluno = dados.getParcelableExtra("aluno");
-        txtNome.setText(aluno.getNome());
-        txtTelefone.setText(aluno.getTelefone());
-        txtEmail.setText(aluno.getEmail());
+        if(dados.hasExtra("aluno")) {
+            aluno = dados.getParcelableExtra("aluno");
+            txtNome.setText(aluno.getNome());
+            txtTelefone.setText(aluno.getTelefone());
+            txtEmail.setText(aluno.getEmail());
+        } else aluno = new Aluno();
     }
 
     private void configuraBotaoSalvar() {
@@ -43,10 +44,12 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Aluno alunoCriado = criaAluno();
-//                salva(alunoCriado);
                 preencheAluno();
-                dao.edita(aluno);
+                if(aluno.temIdValido())
+                    dao.edita(aluno);
+                else
+                    dao.salva(aluno);
+
                 finish();
             }
         });
@@ -56,11 +59,6 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         txtNome = findViewById(R.id.activity_formulario_aluno_nome);
         txtTelefone = findViewById(R.id.activity_formulario_aluno_telefone);
         txtEmail = findViewById(R.id.activity_formulario_aluno_email);
-    }
-
-    private void salva(Aluno aluno) {
-        dao.salva(aluno);
-        finish();
     }
 
     private void preencheAluno() {
