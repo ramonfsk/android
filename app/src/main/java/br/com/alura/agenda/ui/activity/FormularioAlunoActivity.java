@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import br.com.alura.agenda.R;
@@ -19,6 +20,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     private EditText txtTelefone;
     private EditText txtEmail;
     final AlunoDAO dao = new AlunoDAO();
+    private Aluno aluno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         configuraBotaoSalvar();
 
         Intent dados = getIntent();
-        Aluno aluno = (Aluno) dados.getSerializableExtra("aluno");
+        aluno = dados.getParcelableExtra("aluno");
         txtNome.setText(aluno.getNome());
         txtTelefone.setText(aluno.getTelefone());
         txtEmail.setText(aluno.getEmail());
@@ -41,8 +43,11 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Aluno alunoCriado = criaAluno();
-                salva(alunoCriado);
+//                Aluno alunoCriado = criaAluno();
+//                salva(alunoCriado);
+                preencheAluno();
+                dao.edita(aluno);
+                finish();
             }
         });
     }
@@ -58,11 +63,13 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         finish();
     }
 
-    private Aluno criaAluno() {
+    private void preencheAluno() {
         String nome = txtNome.getText().toString();
         String telefone = txtTelefone.getText().toString();
         String email = txtEmail.getText().toString();
 
-        return new Aluno(nome, telefone, email);
+        aluno.setNome(nome);
+        aluno.setTelefone(telefone);
+        aluno.setEmail(email);
     }
 }

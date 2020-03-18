@@ -7,9 +7,10 @@ import androidx.annotation.NonNull;
 
 public class Aluno implements Parcelable {
 
-    private final String nome;
-    private final String telefone;
-    private final String email;
+    private int id = 0;
+    private String nome;
+    private String telefone;
+    private String email;
 
     public Aluno(String nome, String telefone, String email) {
         this.nome = nome;
@@ -18,12 +19,13 @@ public class Aluno implements Parcelable {
     }
 
     private Aluno(Parcel from) {
+        id = from.readInt();
         nome = from.readString();
         telefone = from.readString();
         email = from.readString();
     }
 
-    public static final Parcelable.Creator<Aluno> CREATOR = new Parcelable.Creator<Aluno>() {
+    public static final Creator<Aluno> CREATOR = new Creator<Aluno>() {
         public Aluno createFromParcel(Parcel source) {
             return new Aluno(source);
         }
@@ -50,6 +52,18 @@ public class Aluno implements Parcelable {
         return email;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -57,8 +71,17 @@ public class Aluno implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(nome);
         dest.writeString(telefone);
         dest.writeString(email);
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 }
