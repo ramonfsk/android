@@ -19,6 +19,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
+        setTitle("Novo Aluno");
 
         final AlunoDAO dao = new AlunoDAO();
 
@@ -37,7 +38,7 @@ public class FormularioAlunoActivity extends AppCompatActivity {
                 Aluno alunoCriado = new Aluno(nome, telefone, email);
                 dao.salva(alunoCriado);
 
-                startActivity(new Intent(FormularioAlunoActivity.this, ListaAlunosActivity.class));
+                finish();
             }
         });
     }
