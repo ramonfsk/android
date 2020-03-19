@@ -12,9 +12,12 @@ import br.com.alura.agenda.R;
 import br.com.alura.agenda.dao.AlunoDAO;
 import br.com.alura.agenda.model.Aluno;
 
+import static br.com.alura.agenda.ui.activity.ConstantesActivities.CHAVE_ALUNO;
+import static br.com.alura.agenda.ui.activity.ConstantesActivities.TITULO_APPBAR_EDITA_ALUNO;
+import static br.com.alura.agenda.ui.activity.ConstantesActivities.TITULO_APPBAR_NOVO_ALUNO;
+
 public class FormularioAlunoActivity extends AppCompatActivity {
 
-    public static final String TITULO_APPBAR = "Novo aluno";
     private EditText txtNome;
     private EditText txtTelefone;
     private EditText txtEmail;
@@ -25,18 +28,28 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
-        setTitle(TITULO_APPBAR);
 
         inicializacaoDosCampos();
         configuraBotaoSalvar();
+        carregaAluno();
+    }
 
+    private void carregaAluno() {
         Intent dados = getIntent();
-        if(dados.hasExtra("aluno")) {
-            aluno = dados.getParcelableExtra("aluno");
-            txtNome.setText(aluno.getNome());
-            txtTelefone.setText(aluno.getTelefone());
-            txtEmail.setText(aluno.getEmail());
-        } else aluno = new Aluno();
+        if(dados.hasExtra(CHAVE_ALUNO)) {
+            setTitle(TITULO_APPBAR_EDITA_ALUNO);
+            aluno = dados.getParcelableExtra(CHAVE_ALUNO);
+            preencheCampos();
+        } else {
+            setTitle(TITULO_APPBAR_NOVO_ALUNO);
+            aluno = new Aluno();
+        }
+    }
+
+    private void preencheCampos() {
+        txtNome.setText(aluno.getNome());
+        txtTelefone.setText(aluno.getTelefone());
+        txtEmail.setText(aluno.getEmail());
     }
 
     private void configuraBotaoSalvar() {
@@ -44,15 +57,19 @@ public class FormularioAlunoActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                preencheAluno();
-                if(aluno.temIdValido())
-                    dao.edita(aluno);
-                else
-                    dao.salva(aluno);
-
-                finish();
+                finalizaFormulario();
             }
         });
+    }
+
+    private void finalizaFormulario() {
+        preencheAluno();
+        if(aluno.temIdValido())
+            dao.edita(aluno);
+        else
+            dao.salva(aluno);
+
+        finish();
     }
 
     private void inicializacaoDosCampos() {
